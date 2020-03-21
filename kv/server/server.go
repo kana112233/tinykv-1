@@ -8,6 +8,7 @@ import (
 	"github.com/pingcap-incubator/tinykv/kv/storage/raft_storage"
 	"github.com/pingcap-incubator/tinykv/kv/transaction/commands"
 	"github.com/pingcap-incubator/tinykv/kv/transaction/latches"
+	"github.com/pingcap-incubator/tinykv/log"
 	"github.com/pingcap-incubator/tinykv/proto/pkg/coprocessor"
 	"github.com/pingcap-incubator/tinykv/proto/pkg/kvrpcpb"
 	"github.com/pingcap-incubator/tinykv/proto/pkg/tinykvpb"
@@ -40,6 +41,7 @@ func (server *Server) Run(cmd commands.Command) (interface{}, error) {
 // Transactional API.
 func (server *Server) KvGet(_ context.Context, req *kvrpcpb.GetRequest) (*kvrpcpb.GetResponse, error) {
 	// Your code here 4A
+	log.Info("get called %+v", req)
 	cmd := commands.NewGet(req)
 	resp, err := server.Run(&cmd)
 	if err != nil {
@@ -50,6 +52,8 @@ func (server *Server) KvGet(_ context.Context, req *kvrpcpb.GetRequest) (*kvrpcp
 
 func (server *Server) KvScan(_ context.Context, req *kvrpcpb.ScanRequest) (*kvrpcpb.ScanResponse, error) {
 	// Your code here 4B
+	log.Info("scan called %+v", req)
+
 	cmd := commands.NewScan(req)
 	resp, err := server.Run(&cmd)
 	if err != nil {
@@ -60,6 +64,7 @@ func (server *Server) KvScan(_ context.Context, req *kvrpcpb.ScanRequest) (*kvrp
 
 func (server *Server) KvPrewrite(_ context.Context, req *kvrpcpb.PrewriteRequest) (*kvrpcpb.PrewriteResponse, error) {
 	// Your code here 4A
+	log.Info("prewrite called %+v", req)
 	cmd := commands.NewPrewrite(req)
 	resp, err := server.Run(&cmd)
 	if err != nil {
@@ -70,6 +75,8 @@ func (server *Server) KvPrewrite(_ context.Context, req *kvrpcpb.PrewriteRequest
 
 func (server *Server) KvCommit(_ context.Context, req *kvrpcpb.CommitRequest) (*kvrpcpb.CommitResponse, error) {
 	// Your code here 4A
+	log.Info("commit called %+v", req)
+
 	cmd := commands.NewCommit(req)
 	resp, err := server.Run(&cmd)
 	if err != nil {
@@ -195,6 +202,7 @@ func (server *Server) Snapshot(stream tinykvpb.TinyKv_SnapshotServer) error {
 
 // SQL push down commands.
 func (server *Server) Coprocessor(_ context.Context, req *coprocessor.Request) (*coprocessor.Response, error) {
+	log.Info("coprocessor called %+v", req)
 	return &coprocessor.Response{}, nil
 }
 
