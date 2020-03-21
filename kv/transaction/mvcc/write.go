@@ -63,6 +63,8 @@ func WriteKindFromProto(op kvrpcpb.Op) WriteKind {
 		return WriteKindDelete
 	case kvrpcpb.Op_Rollback:
 		return WriteKindRollback
+	default:
+		panic("unsupported type")
 	}
 
 	return -1
